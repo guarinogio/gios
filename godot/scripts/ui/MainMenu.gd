@@ -65,6 +65,15 @@ func _build_ui() -> void:
 	)
 	root.add_child(diagnostics)
 
+	var debug_overlay := Button.new()
+	debug_overlay.text = "Toggle Debug Overlay"
+	debug_overlay.custom_minimum_size = Vector2(640, 96)
+	debug_overlay.add_theme_font_size_override("font_size", 32)
+	debug_overlay.pressed.connect(func():
+		Gios.debug_overlay.toggle()
+	)
+	root.add_child(debug_overlay)
+
 func _load_games() -> Array:
 	var games: Array = []
 	var dir := DirAccess.open(GAMES_DIR)

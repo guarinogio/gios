@@ -14,3 +14,6 @@ exports/
 vendor/godot/
 tools/godot/
 *.zip
+
+# Generated build metadata
+godot/config/build_info.json

@@ -49,6 +49,28 @@ echo "version: $VERSION"
 
 mkdir -p exports/android
 
+mkdir -p godot/config
+python3 - <<'PY_BUILDINFO'
+import json
+import subprocess
+from datetime import datetime, timezone
+from pathlib import Path
+
+def git(args, fallback="unknown"):
+    try:
+        return subprocess.check_output(["git"] + args, text=True).strip()
+    except Exception:
+        return fallback
+
+data = {
+    "build_time": datetime.now(timezone.utc).isoformat(),
+    "git_commit": git(["rev-parse", "--short", "HEAD"]),
+    "git_branch": git(["branch", "--show-current"]),
+    "profile": "debug"
+}
+Path("godot/config/build_info.json").write_text(json.dumps(data, indent=2) + "\n")
+PY_BUILDINFO
+
 PROJECT_FILE="$GODOT_DIR/project.godot"
 PROJECT_BACKUP="$(mktemp)"
 PRESET_FILE="$GODOT_DIR/export_presets.cfg"
