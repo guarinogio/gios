@@ -55,6 +55,15 @@ func _build_ui() -> void:
 	)
 	root.add_child(login)
 
+	var diagnostics := Button.new()
+	diagnostics.text = "Diagnostics"
+	diagnostics.custom_minimum_size = Vector2(640, 96)
+	diagnostics.add_theme_font_size_override("font_size", 32)
+	diagnostics.pressed.connect(func():
+		Gios.router.go_to("res://scenes/ui/DiagnosticsScreen.tscn")
+	)
+	root.add_child(diagnostics)
+
 func _load_games() -> Array:
 	var games: Array = []
 	var dir := DirAccess.open(GAMES_DIR)
