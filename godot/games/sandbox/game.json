@@ -1,0 +1,14 @@
+{
+  "id": "sandbox",
+  "class_name": "SandboxGame",
+  "title": "Sandbox Game",
+  "version": "0.1.0",
+  "scene": "res://games/sandbox/SandboxGame.tscn",
+  "android_package": "com.azunain.sandbox",
+  "ads_enabled": true,
+  "play_games_enabled": true,
+  "leaderboards": {
+    "default": "sandbox_default_leaderboard"
+  },
+  "achievements": {}
+}

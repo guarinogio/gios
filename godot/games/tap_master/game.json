@@ -1,0 +1,14 @@
+{
+  "id": "tap_master",
+  "class_name": "TapMaster",
+  "title": "TapMaster",
+  "version": "0.1.0",
+  "scene": "res://games/tap_master/TapMaster.tscn",
+  "android_package": "com.azunain.tap_master",
+  "ads_enabled": true,
+  "play_games_enabled": true,
+  "leaderboards": {
+    "default": "tap_master_default_leaderboard"
+  },
+  "achievements": {}
+}
