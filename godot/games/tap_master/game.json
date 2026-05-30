@@ -10,5 +10,6 @@
   "leaderboards": {
     "default": "tap_master_default_leaderboard"
   },
-  "achievements": {}
+  "achievements": {},
+  "version_code": 1
 }
