@@ -1,0 +1,16 @@
+.godot/
+.import/
+export_presets.cfg
+*.apk
+*.aab
+*.keystore
+*.jks
+*.p12
+android/build/
+exports/
+.DS_Store
+
+# Local tools / binaries
+vendor/godot/
+tools/godot/
+*.zip

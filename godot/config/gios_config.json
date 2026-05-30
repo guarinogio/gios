@@ -1,0 +1,17 @@
+{
+  "publisher": "azunain",
+  "engine_name": "gios",
+  "engine_version": "0.1.0",
+  "default_game_id": "sandbox",
+  "android": {
+    "package_prefix": "com.azunain",
+    "min_sdk": 23,
+    "target_sdk": 35
+  },
+  "services": {
+    "analytics": true,
+    "ads": true,
+    "play_games": true,
+    "remote_config": true
+  }
+}
