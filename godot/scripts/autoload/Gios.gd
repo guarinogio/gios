@@ -6,9 +6,11 @@ const VERSION := "0.1.0"
 
 const GiosConfigScript := preload("res://scripts/core/GiosConfig.gd")
 const GiosSaveScript := preload("res://scripts/core/GiosSave.gd")
+const SceneRouterScript := preload("res://scripts/core/SceneRouter.gd")
 
 var config
 var save
+var router
 var services := {}
 
 func _ready() -> void:
@@ -18,12 +20,18 @@ func _ready() -> void:
 	print("%s %s by %s" % [ENGINE_NAME, VERSION, PUBLISHER])
 
 	_boot_save()
+	_boot_router()
 	_boot_services()
 
 func _boot_save() -> void:
 	save = GiosSaveScript.new()
 	add_child(save)
 	save.boot()
+
+func _boot_router() -> void:
+	router = SceneRouterScript.new()
+	add_child(router)
+	router.boot()
 
 func _boot_services() -> void:
 	services.analytics = preload("res://scripts/services/AnalyticsService.gd").new()

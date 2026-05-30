@@ -60,6 +60,7 @@ func _build_ui() -> void:
 	diagnostics.custom_minimum_size = Vector2(640, 96)
 	diagnostics.add_theme_font_size_override("font_size", 32)
 	diagnostics.pressed.connect(func():
+		print("DIAGNOSTICS BUTTON PRESSED")
 		Gios.router.go_to("res://scenes/ui/DiagnosticsScreen.tscn")
 	)
 	root.add_child(diagnostics)
