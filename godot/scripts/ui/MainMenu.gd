@@ -3,22 +3,35 @@ extends Control
 const GAMES_DIR := "res://games"
 
 func _ready() -> void:
+	_build_ui()
+
+func _build_ui() -> void:
+	var bg := ColorRect.new()
+	bg.color = Color(0.05, 0.07, 0.12, 1.0)
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(bg)
+
+	var center := CenterContainer.new()
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(center)
+
 	var root := VBoxContainer.new()
-	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.custom_minimum_size = Vector2(720, 900)
 	root.alignment = BoxContainer.ALIGNMENT_CENTER
-	root.add_theme_constant_override("separation", 18)
-	add_child(root)
+	root.add_theme_constant_override("separation", 32)
+	center.add_child(root)
 
 	var title := Label.new()
 	title.text = "gios\nby azunain"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 72)
 	root.add_child(title)
 
-	var games := _load_games()
-
-	for game in games:
+	for game in _load_games():
 		var button := Button.new()
 		button.text = "Play %s" % game.get("title", game.get("id", "Unknown"))
+		button.custom_minimum_size = Vector2(640, 96)
+		button.add_theme_font_size_override("font_size", 32)
 		button.pressed.connect(func(scene_path = game.get("scene", "")):
 			Gios.router.go_to(scene_path)
 		)
@@ -26,6 +39,8 @@ func _ready() -> void:
 
 	var ads := Button.new()
 	ads.text = "Test Rewarded Ad"
+	ads.custom_minimum_size = Vector2(640, 96)
+	ads.add_theme_font_size_override("font_size", 32)
 	ads.pressed.connect(func():
 		Gios.services.ads.show_rewarded("main_menu_test")
 	)
@@ -33,6 +48,8 @@ func _ready() -> void:
 
 	var login := Button.new()
 	login.text = "Google Play Login"
+	login.custom_minimum_size = Vector2(640, 96)
+	login.add_theme_font_size_override("font_size", 32)
 	login.pressed.connect(func():
 		Gios.services.play_games.sign_in()
 	)
@@ -55,7 +72,6 @@ func _load_games() -> Array:
 			var game := _load_game_config(config_path)
 			if not game.is_empty():
 				games.append(game)
-
 		name = dir.get_next()
 
 	dir.list_dir_end()
