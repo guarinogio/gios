@@ -1,6 +1,7 @@
 extends Control
 
 const GAMES_DIR := "res://games"
+const BuildInfoScript := preload("res://scripts/core/BuildInfo.gd")
 
 func _ready() -> void:
         print("[gios][ui][main_menu] ready")
@@ -88,6 +89,8 @@ func _add_button(parent: VBoxContainer, label: String, callback: Callable) -> vo
 
 func _load_games() -> Array:
         var games: Array = []
+        var selected_game_id := BuildInfoScript.selected_game_id()
+
         var dir := DirAccess.open(GAMES_DIR)
 
         if dir == null:
@@ -102,7 +105,8 @@ func _load_games() -> Array:
                         var config_path := "%s/%s/game.json" % [GAMES_DIR, name]
                         var game := _load_game_config(config_path)
                         if not game.is_empty():
-                                games.append(game)
+                                if selected_game_id.is_empty() or str(game.get("id", "")) == selected_game_id:
+                                        games.append(game)
                 name = dir.get_next()
 
         dir.list_dir_end()
@@ -111,6 +115,7 @@ func _load_games() -> Array:
                 return str(a.get("id", "")) < str(b.get("id", ""))
         )
 
+        print("[gios][ui][main_menu] selected_game_id: ", selected_game_id)
         print("[gios][ui][main_menu] games loaded: ", games.size())
         return games
 
