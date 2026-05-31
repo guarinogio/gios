@@ -47,10 +47,9 @@ echo "scene:   $SCENE"
 echo "package: $PACKAGE"
 echo "version: $VERSION"
 
-mkdir -p exports/android
+mkdir -p exports/android godot/config
 
-mkdir -p godot/config
-python3 - <<'PY_BUILDINFO'
+python3 - <<PY_BUILDINFO
 import json
 import subprocess
 from datetime import datetime, timezone
@@ -62,13 +61,23 @@ def git(args, fallback="unknown"):
     except Exception:
         return fallback
 
+game = json.loads(Path("$GAME_JSON").read_text())
+
 data = {
     "build_time": datetime.now(timezone.utc).isoformat(),
     "git_commit": git(["rev-parse", "--short", "HEAD"]),
     "git_branch": git(["branch", "--show-current"]),
-    "profile": "debug"
+    "profile": "debug",
+    "selected_game_id": game["id"],
+    "selected_game_title": game["title"],
+    "selected_game_scene": game["scene"],
+    "selected_game_package": game["android_package"],
+    "selected_game_version": game.get("version", "0.1.0"),
+    "ads_enabled": bool(game.get("ads_enabled", True)),
+    "play_games_enabled": bool(game.get("play_games_enabled", True))
 }
-Path("godot/config/build_info.json").write_text(json.dumps(data, indent=2) + "\n")
+
+Path("godot/config/build_info.json").write_text(json.dumps(data, indent=2) + "\\n")
 PY_BUILDINFO
 
 PROJECT_FILE="$GODOT_DIR/project.godot"
@@ -96,7 +105,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-python3 - <<PY
+python3 - <<PY_PROJECT
 from pathlib import Path
 
 project = Path("$PROJECT_FILE")
@@ -108,17 +117,17 @@ def replace_line(prefix, new_line):
     for i, line in enumerate(lines):
         if line.startswith(prefix):
             lines[i] = new_line
-            s = "\n".join(lines) + "\n"
+            s = "\\n".join(lines) + "\\n"
             return
-    marker = "[application]\n\n"
-    s = s.replace(marker, marker + new_line + "\n")
+    marker = "[application]\\n\\n"
+    s = s.replace(marker, marker + new_line + "\\n")
 
 replace_line("config/name=", 'config/name="$TITLE"')
-replace_line("run/main_scene=", 'run/main_scene="$SCENE"')
+replace_line("run/main_scene=", 'run/main_scene="res://scenes/Main.tscn"')
 replace_line("config/version=", 'config/version="$VERSION"')
 
 project.write_text(s)
-PY
+PY_PROJECT
 
 cat > "$PRESET_FILE" <<EOF_PRESET
 [preset.0]

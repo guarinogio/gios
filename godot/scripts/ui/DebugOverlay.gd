@@ -23,7 +23,7 @@ func set_enabled(enabled: bool) -> void:
 	visible_enabled = enabled
 	visible = enabled
 	if Gios.services.has("settings"):
-		Gios.services.settings.set_value("debug_overlay_enabled", enabled)
+		Gios.services["settings"].set_value("debug_overlay_enabled", enabled)
 
 func _process(_delta: float) -> void:
 	if not visible_enabled:

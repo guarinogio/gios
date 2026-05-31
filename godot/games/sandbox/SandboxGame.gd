@@ -35,13 +35,13 @@ func _ready() -> void:
 	finish.text = "Finish Game"
 	finish.pressed.connect(func():
 		finish_game("manual")
-		Gios.router.go_to("res://scenes/Main.tscn")
+		Gios.router.go_to("res://scenes/ui/MainMenu.tscn")
 	)
 	root.add_child(finish)
 
 	var back := Button.new()
 	back.text = "Back"
 	back.pressed.connect(func():
-		Gios.router.go_to("res://scenes/Main.tscn")
+		Gios.router.go_to("res://scenes/ui/MainMenu.tscn")
 	)
 	root.add_child(back)

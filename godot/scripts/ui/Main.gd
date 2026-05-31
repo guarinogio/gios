@@ -8,7 +8,7 @@ func _ready() -> void:
 	label.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(label)
 
-	Gios.services.analytics.event("app_start", {
+	Gios.services["analytics"].event("app_start", {
 		"engine": Gios.ENGINE_NAME,
 		"version": Gios.VERSION
 	})

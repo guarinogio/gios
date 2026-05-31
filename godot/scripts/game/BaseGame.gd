@@ -23,7 +23,7 @@ func add_score(amount: int) -> void:
 	})
 
 	if Gios.services.has("haptics"):
-		Gios.services.haptics.tap()
+		Gios.services["haptics"].tap()
 
 func finish_game(reason: String = "completed") -> void:
 	var duration_ms := Time.get_ticks_msec() - started_at_ms
@@ -38,7 +38,7 @@ func finish_game(reason: String = "completed") -> void:
 	})
 
 	if Gios.services.has("haptics"):
-		Gios.services.haptics.success()
+		Gios.services["haptics"].success()
 
 	if Gios.services.has("play_games"):
-		Gios.services.play_games.submit_score("%s_default_leaderboard" % game_id, score)
+		Gios.services["play_games"].submit_score("%s_default_leaderboard" % game_id, score)
