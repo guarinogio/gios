@@ -52,6 +52,7 @@ func _boot_router() -> void:
 
 func _boot_services() -> void:
 	services.settings = preload("res://scripts/services/SettingsService.gd").new()
+	services.consent = preload("res://scripts/services/ConsentService.gd").new()
 	services.analytics = preload("res://scripts/services/AnalyticsService.gd").new()
 	services.ads = preload("res://scripts/services/AdsService.gd").new()
 	services.play_games = preload("res://scripts/services/PlayGamesService.gd").new()

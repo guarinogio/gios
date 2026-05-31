@@ -114,7 +114,7 @@ def replace_line(prefix, new_line):
     s = s.replace(marker, marker + new_line + "\n")
 
 replace_line("config/name=", 'config/name="$TITLE"')
-replace_line("run/main_scene=", 'run/main_scene="$SCENE"')
+replace_line("run/main_scene=", 'run/main_scene="res://scenes/Main.tscn"')
 replace_line("config/version=", 'config/version="$VERSION"')
 
 project.write_text(s)

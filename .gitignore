@@ -17,3 +17,10 @@ tools/godot/
 
 # Generated build metadata
 godot/config/build_info.json
+
+# Android / Gradle generated artifacts
+godot/android/
+godot/.godot/
+.gradle/
+**/build/
+exports/android/

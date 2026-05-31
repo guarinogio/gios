@@ -55,7 +55,7 @@ func _build_ui() -> void:
 	back.custom_minimum_size = Vector2(640, 96)
 	back.add_theme_font_size_override("font_size", 32)
 	back.pressed.connect(func():
-		Gios.router.go_to("res://scenes/Main.tscn")
+		Gios.router.go_to("res://scenes/ui/MainMenu.tscn")
 	)
 	root.add_child(back)
 
