@@ -91,7 +91,7 @@ func _build_ui() -> void:
         back.custom_minimum_size = Vector2(640, 104)
         back.add_theme_font_size_override("font_size", 34)
         back.pressed.connect(func():
-                if Gios.services.has("consent") and Gios.services.consent.is_required():
+                if Gios.services.has("consent") and Gios.services["consent"].is_required():
                         Gios.router.go_to("res://scenes/ui/ConsentScreen.tscn")
                 else:
                         Gios.router.go_to("res://scenes/ui/MainMenu.tscn")

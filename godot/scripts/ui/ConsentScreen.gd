@@ -49,7 +49,7 @@ func _build_ui() -> void:
         accept.custom_minimum_size = Vector2(640, 96)
         accept.add_theme_font_size_override("font_size", 32)
         accept.pressed.connect(func():
-                Gios.services.consent.accept()
+                Gios.services["consent"].accept()
                 Gios.router.go_to("res://scenes/ui/MainMenu.tscn")
         )
         root.add_child(accept)
@@ -59,7 +59,7 @@ func _build_ui() -> void:
         reject.custom_minimum_size = Vector2(640, 96)
         reject.add_theme_font_size_override("font_size", 32)
         reject.pressed.connect(func():
-                Gios.services.consent.reject()
+                Gios.services["consent"].reject()
                 Gios.router.go_to("res://scenes/ui/MainMenu.tscn")
         )
         root.add_child(reject)

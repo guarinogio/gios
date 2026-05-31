@@ -59,12 +59,12 @@ func _build_ui() -> void:
 
         _add_button(root, "Test Rewarded Ad", func():
                 print("[gios][ui][main_menu] test rewarded")
-                Gios.services.ads.show_rewarded("main_menu_test")
+                Gios.services["ads"].show_rewarded("main_menu_test")
         )
 
         _add_button(root, "Google Play Login", func():
                 print("[gios][ui][main_menu] play games login")
-                Gios.services.play_games.sign_in()
+                Gios.services["play_games"].sign_in()
         )
 
         _add_button(root, "Diagnostics", func():

@@ -22,4 +22,4 @@ func failure() -> void:
 func _enabled() -> bool:
 	if not Gios.services.has("settings"):
 		return true
-	return bool(Gios.services.settings.get_value("haptics_enabled", true))
+	return bool(Gios.services["settings"].get_value("haptics_enabled", true))

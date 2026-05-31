@@ -38,17 +38,17 @@ func _build_ui() -> void:
         root.add_child(status_label)
 
         _add_button(root, "Accept Optional Services", func():
-                Gios.services.consent.accept()
+                Gios.services["consent"].accept()
                 _refresh()
         )
 
         _add_button(root, "Reject Optional Services", func():
-                Gios.services.consent.reject()
+                Gios.services["consent"].reject()
                 _refresh()
         )
 
         _add_button(root, "Reset Consent", func():
-                Gios.services.consent.reset()
+                Gios.services["consent"].reset()
                 _refresh()
         )
 
@@ -73,7 +73,7 @@ func _refresh() -> void:
                 status_label.text = "Consent service missing."
                 return
 
-        var summary: Dictionary = Gios.services.consent.summary()
+        var summary: Dictionary = Gios.services["consent"].summary()
 
         status_label.text = "\n".join([
                 "Current state: %s" % summary.get("state", "UNKNOWN"),

@@ -18,4 +18,4 @@ func _should_block(name: String) -> bool:
         if name == "consent_changed":
                 return false
 
-        return not Gios.services.consent.can_collect_analytics()
+        return not Gios.services["consent"].can_collect_analytics()

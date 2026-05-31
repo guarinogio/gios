@@ -22,4 +22,4 @@ func _can_show_ads() -> bool:
         if not Gios.services.has("consent"):
                 return false
 
-        return Gios.services.consent.can_show_ads()
+        return Gios.services["consent"].can_show_ads()
