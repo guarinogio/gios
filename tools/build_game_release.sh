@@ -11,6 +11,7 @@ GAME_ID="$1"
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 GODOT_DIR="$ROOT_DIR/godot"
 GAME_JSON="$GODOT_DIR/games/$GAME_ID/game.json"
+RELEASE_ENV="${GIOS_RELEASE_ENV:-$HOME/.config/azunain/gios/release.env}"
 
 cd "$ROOT_DIR"
 source scripts/env.sh
@@ -19,6 +20,25 @@ if [ ! -f "$GAME_JSON" ]; then
   echo "Game not found: $GAME_JSON"
   exit 1
 fi
+
+if [ ! -f "$RELEASE_ENV" ]; then
+  echo "Missing release env: $RELEASE_ENV"
+  exit 1
+fi
+
+source "$RELEASE_ENV"
+
+: "${GIOS_RELEASE_KEYSTORE:?Missing GIOS_RELEASE_KEYSTORE}"
+: "${GIOS_RELEASE_KEY_ALIAS:?Missing GIOS_RELEASE_KEY_ALIAS}"
+: "${GIOS_RELEASE_KEYSTORE_PASSWORD:?Missing GIOS_RELEASE_KEYSTORE_PASSWORD}"
+: "${GIOS_RELEASE_KEY_PASSWORD:?Missing GIOS_RELEASE_KEY_PASSWORD}"
+
+if [ ! -f "$GIOS_RELEASE_KEYSTORE" ]; then
+  echo "Missing keystore: $GIOS_RELEASE_KEYSTORE"
+  exit 1
+fi
+
+./tools/ensure_android_build_template.sh
 
 readarray -t META < <(python3 - <<PY
 import json
@@ -40,12 +60,14 @@ PACKAGE="${META[3]}"
 VERSION="${META[4]}"
 AAB_PATH="../exports/android/${ID}-release.aab"
 
-echo "== Building release game =="
+echo "== Building signed release AAB =="
 echo "id:      $ID"
 echo "title:   $TITLE"
 echo "scene:   $SCENE"
 echo "package: $PACKAGE"
 echo "version: $VERSION"
+echo "keystore: $GIOS_RELEASE_KEYSTORE"
+echo "alias:   $GIOS_RELEASE_KEY_ALIAS"
 
 mkdir -p exports/android godot/config
 
@@ -76,7 +98,8 @@ data = {
     "ads_enabled": bool(game.get("ads_enabled", True)),
     "play_games_enabled": bool(game.get("play_games_enabled", True))
 }
-Path("godot/config/build_info.json").write_text(json.dumps(data, indent=2) + "\n")
+
+Path("godot/config/build_info.json").write_text(json.dumps(data, indent=2) + "\\n")
 PY_BUILDINFO
 
 PROJECT_FILE="$GODOT_DIR/project.godot"
@@ -104,7 +127,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-python3 - <<PY
+python3 - <<PY_PROJECT
 from pathlib import Path
 
 project = Path("$PROJECT_FILE")
@@ -116,17 +139,17 @@ def replace_line(prefix, new_line):
     for i, line in enumerate(lines):
         if line.startswith(prefix):
             lines[i] = new_line
-            s = "\n".join(lines) + "\n"
+            s = "\\n".join(lines) + "\\n"
             return
-    marker = "[application]\n\n"
-    s = s.replace(marker, marker + new_line + "\n")
+    marker = "[application]\\n\\n"
+    s = s.replace(marker, marker + new_line + "\\n")
 
 replace_line("config/name=", 'config/name="$TITLE"')
 replace_line("run/main_scene=", 'run/main_scene="res://scenes/Main.tscn"')
 replace_line("config/version=", 'config/version="$VERSION"')
 
 project.write_text(s)
-PY
+PY_PROJECT
 
 cat > "$PRESET_FILE" <<EOF_PRESET
 [preset.0]
@@ -150,7 +173,7 @@ script_export_mode=1
 
 custom_template/debug=""
 custom_template/release=""
-gradle_build/use_gradle_build=false
+gradle_build/use_gradle_build=true
 gradle_build/gradle_build_directory=""
 gradle_build/android_source_template=""
 gradle_build/compress_native_libraries=false
@@ -175,6 +198,13 @@ package/show_as_launcher_app=true
 launcher_icons/main_192x192="res://assets/icons/icon.svg"
 launcher_icons/adaptive_foreground_432x432="res://assets/icons/icon.svg"
 launcher_icons/adaptive_background_432x432=""
+keystore/debug=""
+keystore/debug_user=""
+keystore/debug_password=""
+keystore/release="$GIOS_RELEASE_KEYSTORE"
+keystore/release_user="$GIOS_RELEASE_KEY_ALIAS"
+keystore/release_password="$GIOS_RELEASE_KEYSTORE_PASSWORD"
+keystore/release_key_password="$GIOS_RELEASE_KEY_PASSWORD"
 graphics/opengl_debug=false
 xr_features/xr_mode=0
 screen/immersive_mode=true
@@ -192,7 +222,7 @@ echo "== Checking project =="
 ./scripts/check_project.sh
 
 echo
-echo "== Exporting AAB =="
+echo "== Exporting signed AAB =="
 godot --headless \
   --path godot \
   --export-release "Android Release" \
